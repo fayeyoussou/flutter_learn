@@ -5,6 +5,13 @@ class Question extends StatelessWidget {
   Question(this._questionText);
   @override
   Widget build(BuildContext context) {
-    return Text(_questionText);
+    return Container(
+      margin: EdgeInsets.all(10),
+      width: double.infinity,
+        child: Text(
+      _questionText,
+      style: TextStyle(fontSize: 28, fontFamily: 'Fira Code'),
+      textAlign: TextAlign.center,
+    ));
   }
 }
