@@ -13,14 +13,30 @@ double addNumber(double num1, double num2) {
  */
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
+  var questionIndex = 0;
+  void answerQuestion() {
+    setState(() {
+      questionIndex++;
+    });
+    print(questionIndex);
+  }
+
   /**
    * Override the already existing method 
    */
   @override
   Widget build(BuildContext context) {
     var question = [
-      "what's your favorite color ? ",
+      "what's your favorite color faye ? ",
       "what's your favorite animal ?"
     ];
     return MaterialApp(
@@ -30,14 +46,14 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: <Widget>[
-            Text('Question'),
+            Text(question[questionIndex]),
             RaisedButton(
               child: Text(question[1]),
               onPressed: null,
             ),
             RaisedButton(
-              child: Text(question[0]),
-              onPressed: null,
+              child: Text(question.elementAt(1)),
+              onPressed: answerQuestion,
             )
           ],
         ),
