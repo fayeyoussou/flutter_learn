@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './question.dart';
+import './answer.dart';
 
 double addNumber(double num1, double num2) {
   return num1 + num2;
@@ -48,14 +49,10 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: <Widget>[
             Question(question[_questionIndex]),
-            RaisedButton(
-              child: Text(question[1]),
-              onPressed: null,
-            ),
-            RaisedButton(
-              child: Text(question.elementAt(1)),
-              onPressed: _answerQuestion,
-            )
+            Answer(_answerQuestion),
+            Answer(_answerQuestion),
+            Answer(_answerQuestion),
+            Answer(_answerQuestion)
           ],
         ),
       ),
