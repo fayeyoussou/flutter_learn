@@ -11,11 +11,13 @@ double addNumber(double num1, double num2) {
  *  dart will automatically look for main file 
  *  and then look for a main function   
  */
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  /**
+   * Override the already existing method 
+   */
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Text('Youssoupha FAYE'),
