@@ -19,8 +19,29 @@ class MyApp extends StatelessWidget {
    */
   @override
   Widget build(BuildContext context) {
+    var question = [
+      "what's your favorite color ? ",
+      "what's your favorite animal ?"
+    ];
     return MaterialApp(
-      home: Text('Youssoupha FAYE'),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('My first App'),
+        ),
+        body: Column(
+          children: <Widget>[
+            Text('Question'),
+            RaisedButton(
+              child: Text(question[1]),
+              onPressed: null,
+            ),
+            RaisedButton(
+              child: Text(question[0]),
+              onPressed: null,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
