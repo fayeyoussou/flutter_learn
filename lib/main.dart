@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 double addNumber(double num1, double num2) {
   return num1 + num2;
 }
@@ -9,4 +11,14 @@ double addNumber(double num1, double num2) {
  *  dart will automatically look for main file 
  *  and then look for a main function   
  */
-void main() {}
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Text('Youssoupha FAYE'),
+    );
+  }
+}
