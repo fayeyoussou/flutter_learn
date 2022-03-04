@@ -6,7 +6,7 @@ class Answer extends StatelessWidget {
    *    you can change final function selectHandler; to 
    *    " final voidCallback selectedHandler ""
    */
-  final Function selectedHandler;
+  final VoidCallback selectedHandler;
   final String answerText;
   Answer(this.selectedHandler,this.answerText);
   @override
