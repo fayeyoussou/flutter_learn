@@ -7,7 +7,8 @@ class Answer extends StatelessWidget {
    *    " final voidCallback selectedHandler ""
    */
   final Function selectedHandler;
-  Answer(this.selectedHandler);
+  final String answerText;
+  Answer(this.selectedHandler,this.answerText);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +16,7 @@ class Answer extends StatelessWidget {
       child: RaisedButton(
         color: Color.fromARGB(255, 33, 78, 163),
         textColor: Color.fromARGB(255, 193, 223, 233),
-        child: Text('Answer 1'),
+        child: Text(this.answerText),
         onPressed: selectedHandler,
       ),
     );
