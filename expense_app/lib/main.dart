@@ -51,16 +51,36 @@ class MyHomePage extends StatelessWidget {
                                   vertical: 10, horizontal: 15),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.amber,width: 3),
+                                  border: Border.all(color: Colors.purple,width: 3),
                                   color: Colors.cyan
                                   
                                   ),
-                              child: Text(e.amount.toString()),
+                              child: Text(
+                                e.amount.toString(),
+                                style:TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.purple
+                                ),),
                             ),
                             Column(
+                              
+                              crossAxisAlignment: CrossAxisAlignment.end ,
                               children: [
-                                Text(e.title),
-                                Text(e.date.toString())
+                                Text(
+                                  e.title
+                                  ,style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.amber
+                                  ),),
+                                Text(
+                                  e.date.toString(),
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10
+                                  ),
+                                  )
                               ],
                             )
                           ],
