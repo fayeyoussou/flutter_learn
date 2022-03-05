@@ -19,7 +19,10 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Flutter App'),
       ),
-      body: Column(children: [
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
         Container(
           width: double.infinity,
           height: 100,
@@ -31,8 +34,14 @@ class MyHomePage extends StatelessWidget {
             
           ),
         ),
-        Card(
-          child: Text('List of transaction'),
+        Container(
+          
+          height: 50,
+          child: Card(
+            color: Colors.tealAccent,
+            child: Text('List of transaction'),
+            elevation: 10,
+          ),
         )
       ],)
     );
