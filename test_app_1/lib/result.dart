@@ -27,7 +27,7 @@ class Result extends StatelessWidget {
                 fontSize: 46, fontWeight: FontWeight.bold, fontFamily: "Arial"),
             textAlign: TextAlign.center,
           ),
-          TextButton(onPressed: reset,child: Text('Recommencer '),style: TextButton.styleFrom(primary: Colors.amber),)
+          TextButton(onPressed: reset,child: Text('Recommencer '),style: TextButton.styleFrom(primary: Color.fromARGB(255, 155, 65, 23)),)
         ],
       ),
     );

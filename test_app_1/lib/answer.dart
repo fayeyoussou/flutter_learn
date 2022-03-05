@@ -15,8 +15,8 @@ class Answer extends StatelessWidget {
       width: double.infinity,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-            primary: Colors.amberAccent,
-            side: BorderSide(color: Color.fromRGBO(120, 60, 30, 0.8),),),
+            primary: Color.fromARGB(255, 51, 48, 177),
+            side: BorderSide(color: Color.fromARGB(204, 115, 157, 204),),),
         child: Text(this.answerText),
         onPressed: selectedHandler,
       ),
