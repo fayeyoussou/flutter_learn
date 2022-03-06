@@ -1,5 +1,6 @@
 
 
+import 'package:expense_app/widgets/user_transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -30,24 +31,27 @@ class MyHomePage extends StatelessWidget {
     // Intl.defaultLocale = 'fr_FR';
     return Scaffold(
         appBar: AppBar(
-          title: Text('Flutter App'),
+          title: Text('QrCode App'),
         ),
-        body: Column(
-          // it is the default setting
-          //mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 50,
-              child: Card(
-                color: Color.fromARGB(255, 209, 38, 104),
-                child: Text('Chart!'),
-                elevation: 5,
+        body: SingleChildScrollView(
+          child: Column(
+            // it is the default setting
+            //mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 50,
+                child: Card(
+                  color: Color.fromARGB(255, 209, 38, 104),
+                  child: Text('Chart!'),
+                  elevation: 5,
+                ),
               ),
-            ),
-            
-            ],
+              UserTransaction()
+              
+              ],
+          ),
         ));
   }
 }
