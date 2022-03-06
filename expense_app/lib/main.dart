@@ -1,3 +1,4 @@
+import 'package:expense_app/widgets/chart.dart';
 import 'package:expense_app/widgets/new_transaction.dart';
 import 'package:expense_app/widgets/transaction_list.dart';
 
@@ -15,10 +16,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.amber).
-        copyWith(secondary: Colors.deepPurple).copyWith(tertiary: Colors.blue),
-        fontFamily: 'Quicksand'
-      ),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.amber)
+              .copyWith(secondary: Colors.deepPurple)
+              .copyWith(tertiary: Colors.blue),
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+              bodyText1: const TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.blueAccent)),
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue))),
       title: 'Expense',
       home: MyHomePage(),
     );
@@ -36,9 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final amountController = TextEditingController();
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 'T1', title: 'Chaussure', amount: 1000, date: DateTime.now()),
-    Transaction(id: 'T2', title: 'Costume', amount: 2000, date: DateTime.now())
+    // Transaction(
+    //     id: 'T1', title: 'Chaussure', amount: 1000, date: DateTime.now()),
+    // Transaction(id: 'T2', title: 'Costume', amount: 2000, date: DateTime.now())
   ];
   void _addNew(String txTitle, double txAmount) {
     final newTx = Transaction(
@@ -51,13 +64,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List <Transaction> get _recentTransactions {
+    return _userTransactions.where((element) {
+      return element.date.isAfter(DateTime.now().subtract(const Duration(days: 7))) ;
+    }).toList();
+  }
+
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
         context: ctx,
         builder: (bCtx) {
           return GestureDetector(
-            onTap: (){},
-            child:NewTransaction(addNew: _addNew));
+              onTap: () {}, child: NewTransaction(addNew: _addNew));
         });
   }
 
@@ -67,11 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // Intl.defaultLocale = 'fr_FR';
     return Scaffold(
       appBar: AppBar(
-        title: Text('QrCode App'),
+        title: const Text('QrCode App'),
         actions: [
           IconButton(
               onPressed: () => _startAddNewTransaction(context),
-              icon: Icon(Icons.add))
+              icon: const Icon(Icons.add))
         ],
       ),
       body: SingleChildScrollView(
@@ -82,11 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Container(
               width: double.infinity,
-              height: 50,
+              height: 200,
               child: Card(
-                color: Color.fromARGB(255, 209, 38, 104),
-                child: Text('Chart!'),
-                elevation: 5,
+                color: const Color.fromARGB(255, 209, 38, 104),
+                child: Chart(_recentTransactions),
+                elevation: 20,
               ),
             ),
             TransactionList(_userTransactions)
@@ -95,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
     );
