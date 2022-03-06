@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   //const New_transaction({Key? key}) : super(key: key);
   final void Function(String, double) addNew;
-  const NewTransaction({required this.addNew});
+
+  NewTransaction({required this.addNew});
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitForm() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.tryParse(amountController.text);
+    if (enteredTitle.isEmpty || enteredAmount! <= 0) return;
+    widget.addNew(titleController.text, double.parse(amountController.text));
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final amountController = TextEditingController();
     return Card(
       child: Container(
         padding: EdgeInsets.all(10),
@@ -17,13 +34,13 @@ class NewTransaction extends StatelessWidget {
             controller: titleController,
           ),
           TextField(
+            onSubmitted: (_) => submitForm(),
             decoration: InputDecoration(labelText: 'Amount'),
             controller: amountController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
           ),
           TextButton(
-            onPressed: () {
-              addNew(titleController.text, double.parse(amountController.text));
-            },
+            onPressed: submitForm,
             child: Text('Valider'),
             style: TextButton.styleFrom(
                 primary: Colors.deepPurple,
