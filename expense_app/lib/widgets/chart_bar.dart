@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 class ChartBar extends StatelessWidget {
   // const ChartBar({Key? key}) : super(key: key);
   final ChartValue chart;
+  // final String day;
   final double spendpourcentage;
   ChartBar(this.chart, this.spendpourcentage);
   @override
   Widget build(BuildContext context) {
+    // return Text(chart.toString()+'/ '+day+'/ '+spendpourcentage.toString() );
     return Column(
       children: [
-        Text('${chart.amount.toString()} F'),
+        FittedBox(child: Text('${((chart.amount)/1000).toStringAsFixed(1)}k')),
         SizedBox(height: 4),
         Container(
             height: 60,

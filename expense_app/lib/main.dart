@@ -3,8 +3,6 @@ import 'package:expense_app/widgets/new_transaction.dart';
 import 'package:expense_app/widgets/transaction_list.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 import 'models/transaction.dart';
 
@@ -16,9 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.amber)
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(secondary: Colors.deepPurple)
-              .copyWith(tertiary: Colors.blue),
+              .copyWith(tertiary: Colors.amber),
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
               bodyText1: const TextStyle(
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
                   fontFamily: 'OpenSans',
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue))),
+                  color: Colors.amberAccent))),
       title: 'Expense',
       home: MyHomePage(),
     );
@@ -49,9 +47,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final amountController = TextEditingController();
   final List<Transaction> _userTransactions = [
-    // Transaction(
-    //     id: 'T1', title: 'Chaussure', amount: 1000, date: DateTime.now()),
-    // Transaction(id: 'T2', title: 'Costume', amount: 2000, date: DateTime.now())
+    Transaction(
+        id: 'T1', title: 'Chaussure', amount: 1000, date: DateTime.now().subtract(Duration(days: 2))
+        ),
+    Transaction(
+      id: 'T2', title: 'Costume', amount: 2000, date: DateTime.now().subtract(Duration(days: 3))
+      ),
+      Transaction(
+      id: 'T2', title: 'Costume', amount: 3000, date: DateTime.now().subtract(Duration(days: 1))
+      ),
+      Transaction(
+      id: 'T2', title: 'soup kandja', amount: 1500, date: DateTime.now().subtract(Duration(days: 1))
+      )
   ];
   void _addNew(String txTitle, double txAmount) {
     final newTx = Transaction(
@@ -100,9 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Container(
               width: double.infinity,
-              height: 200,
+              height: 170,
               child: Card(
-                color: const Color.fromARGB(255, 209, 38, 104),
+                color: Theme.of(context).primaryColorDark,
                 child: Chart(_recentTransactions),
                 elevation: 20,
               ),

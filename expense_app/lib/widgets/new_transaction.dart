@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ai_barcode/ai_barcode.dart';
+
 
 class NewTransaction extends StatefulWidget {
   //const New_transaction({Key? key}) : super(key: key);

@@ -12,58 +12,83 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting();
     return Container(
-      height: 300,
+      height: 350,
       child: transactions.isEmpty
           ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   'Vous n\'avez rien achete \npour le moment',
-                  style: Theme.of(context).textTheme.bodyText1,textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyText1,
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
-                  height: 200,
-                  child: Image.asset('assets/images/waiting.png',fit: BoxFit.cover,))
+                    height: 200,
+                    child: Image.asset(
+                      'assets/images/waiting.png',
+                      fit: BoxFit.cover,
+                    ))
               ],
             )
           : ListView.builder(
               itemBuilder: (context, index) {
                 return Card(
-                  elevation: 10,
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.purple, width: 3),
-                            color: Colors.cyan),
-                        child: Text(
-                          '${transactions[index].amount.toInt()} F',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Theme.of(context).primaryColorDark),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(transactions[index].title,
-                              style: Theme.of(context).textTheme.bodyText1),
-                          Text(
-                            DateFormat('EEEEE d MMM yyyy', 'fr')
-                                .format(transactions[index].date),
-                            style: TextStyle(color: Colors.grey, fontSize: 10),
-                          )
-                        ],
-                      )
-                    ],
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 5
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: FittedBox(
+                              child: Text(
+                                  '${(transactions[index].amount / 1000).toStringAsFixed(2)}K'))),
+                    ),
+                    title: Text(transactions[index].title,style: Theme.of(context).textTheme.bodyText1,),
+                    subtitle: Text( DateFormat('EEEEE d MMM yyyy', 'fr')
+                                     .format(transactions[index].date),),
                   ),
                 );
+                //   return Card(
+                //     elevation: 10,
+                //     child: Row(
+                //       children: [
+                //         Container(
+                //           padding: EdgeInsets.all(10),
+                //           margin:
+                //               EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                //           decoration: BoxDecoration(
+                //               borderRadius: BorderRadius.circular(10),
+                //               border: Border.all(color: Colors.purple, width: 3),
+                //               color: Colors.cyan),
+                //           child: Text(
+                //             '${transactions[index].amount.toInt()} F',
+                //             style: TextStyle(
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 20,
+                //                 color: Theme.of(context).primaryColorDark),
+                //           ),
+                //         ),
+                //         Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Text(transactions[index].title,
+                //                 style: Theme.of(context).textTheme.bodyText1),
+                //             Text(
+                //               DateFormat('EEEEE d MMM yyyy', 'fr')
+                //                   .format(transactions[index].date),
+                //               style: TextStyle(color: Colors.grey, fontSize: 10),
+                //             )
+                //           ],
+                //         )
+                //       ],
+                //     ),
+                //   );
               },
               itemCount: transactions.length,
             ),
