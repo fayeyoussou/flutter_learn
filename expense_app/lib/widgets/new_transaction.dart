@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ai_barcode/ai_barcode.dart';
-
 
 class NewTransaction extends StatefulWidget {
   //const New_transaction({Key? key}) : super(key: key);
   final void Function(String, double) addNew;
+  final String produit;
 
-  NewTransaction({required this.addNew});
+  NewTransaction({required this.addNew,required this.produit});
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -27,32 +26,9 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          TextField(
-            decoration: InputDecoration(labelText: 'Title'),
-            controller: titleController,
-          ),
-          TextField(
-            onSubmitted: (_) => submitForm(),
-            decoration: InputDecoration(labelText: 'Amount'),
-            controller: amountController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-          ),
-          TextButton(
-            onPressed: submitForm,
-            child: Text('Valider'),
-            style: TextButton.styleFrom(
-                primary: Colors.deepPurple,
-                textStyle: TextStyle(
-                    color: Colors.purple,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15)),
-          )
-        ]),
-      ),
+    return Container(
+      height: 100,
+      child: Text(widget.produit)
     );
   }
 }

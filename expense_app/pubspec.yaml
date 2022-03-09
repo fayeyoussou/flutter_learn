@@ -36,6 +36,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl: ^0.17.0
   ai_barcode: ^3.0.1
+  qrcode: ^1.0.4
+  permission_handler: ^9.2.0
+  flutter_barcode_scanner: ^2.0.0
+  mysql1: ^0.19.2
+  passwordfield: ^0.1.0
+  mysql_utils: ^1.0.7
   
   
   
