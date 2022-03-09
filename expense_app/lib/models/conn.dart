@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'package:expense_app/models/user.dart';
 import 'package:mysql_utils/mysql1/mysql1.dart';
 import 'package:mysql_utils/mysql_utils.dart';
 
 class Conn {
-  Future<Map<dynamic, dynamic>> find(int id) async {
+  Future<User> find(int id) async {
     final db = MysqlUtils(
       settings: ConnectionSettings(
         host: 'remotemysql.com',
@@ -20,9 +21,20 @@ class Conn {
     var row = await db.getOne(
       table: 'utilisateur',
       fields: '*',
-      where: {'idutilisateur': 1},
+      where: {
+        'idutilisateur': 2
+        },
     );
-    return row;
+    User u = User();
+    row.forEach((key, value) {
+      if (key == 'idutilisateur')
+        u.id = value;
+      else if (key == 'login')
+        u.login = value;
+      else
+        u.pin = value;
+    });
+    return u;
     ////
     ///
     //

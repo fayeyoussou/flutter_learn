@@ -3,8 +3,11 @@ import 'dart:ffi';
 import 'package:expense_app/widgets/myhomepage.dart';
 import 'package:flutter/material.dart';
 
+import '../models/user.dart';
+
 class BodyConnexion extends StatefulWidget {
-  Function connected;
+  Function(String,int) connected;
+  // Future<User> user;
   BodyConnexion(this.connected);
 
   @override
@@ -50,7 +53,7 @@ class _BodyConnexionState extends State<BodyConnexion> {
                     splashColor: Colors.lightGreenAccent,
                     tooltip: "Se connecter",
                     onPressed: () {
-                      widget.connected();
+                      widget.connected(controller.text,int.parse(passwordController.text));
                     },
                   )),
             ),

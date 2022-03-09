@@ -1,3 +1,4 @@
+import 'package:expense_app/models/exemple.dart';
 import 'package:expense_app/widgets/body_connexion.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,9 @@ import 'package:expense_app/widgets/transaction_list.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:expense_app/models/transaction.dart';
+
+import '../models/conn.dart';
+import '../models/user.dart';
 // import '../models/transaction.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -86,13 +90,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    void connect() {
+    void connect(String user,int pin) {
     // this.name = controller.text;
-
+    final Future<User> _connectVal = Conn().find(1);
     setState(() {
       connected = true;
     });
   }
+  final Future<User> _connectVal = Conn().find(2);
     // initializeDateFormatting();
     // Intl.defaultLocale = 'fr_FR';
     return Scaffold(
@@ -101,9 +106,15 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
       ),
       body: connected ? SingleChildScrollView(
-        child: Column(
-          // it is the default setting
-          //mainAxisAlignment: MainAxisAlignment.start,
+        child: FutureBuilder<User>(
+        future: _connectVal, // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          List<Widget> children;
+          if (snapshot.hasData) {
+            children = <Widget>[
+              Column(
+        //   // it is the default setting
+        //   //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
@@ -118,7 +129,58 @@ class _MyHomePageState extends State<MyHomePage> {
             TransactionList(_userTransactions)
           ],
         ),
-      ) : BodyConnexion(()=>connect()),
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting result...'),
+              )
+            ];
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            ),
+          );
+        },
+      ),
+        // child: Column(
+        //   // it is the default setting
+        //   //mainAxisAlignment: MainAxisAlignment.start,
+        //   crossAxisAlignment: CrossAxisAlignment.stretch,
+        //   children: [
+        //     Container(
+        //       width: double.infinity,
+        //       height: 170,
+        //       child: Card(
+        //         color: Theme.of(context).primaryColorDark,
+        //         child: Chart(_recentTransactions),
+        //         elevation: 20,
+        //       ),
+        //     ),
+        //     TransactionList(_userTransactions)
+        //   ],
+        // ),
+      ) : BodyConnexion(connect),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
        floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),

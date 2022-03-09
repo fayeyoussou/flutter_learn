@@ -14,14 +14,14 @@ class User {
       // print(set);
     });
     User u = User();
-    res.forEach((key, value) {
-      if (key == 'idutilisateur')
-        this.id = value;
-      else if (key == 'login')
-        this.login = value;
-      else
-        this.pin = value;
-    });
+    // res.forEach((key, value) {
+    //   if (key == 'idutilisateur')
+    //     this.id = value;
+    //   else if (key == 'login')
+    //     this.login = value;
+    //   else
+    //     this.pin = value;
+    // });
     // this = u;
     // ignore: unused_local_variable
 
