@@ -9,7 +9,7 @@ class User {
     var co = Conn();
     var set;
     // ignore: avoid_print
-    var res = await co.find(2).then((value) {
+    var res = await co.findUserByid(2).then((value) {
       return value;
       // print(set);
     });

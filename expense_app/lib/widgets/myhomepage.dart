@@ -21,6 +21,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // String? titleInput;
   bool connected = false;
+  
   final titleController = TextEditingController();
 
   final amountController = TextEditingController();
@@ -90,14 +91,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<User> _connectVal = Conn().findUserByid(2);
     void connect(String user,int pin) {
     // this.name = controller.text;
-    final Future<User> _connectVal = Conn().find(1);
+
     setState(() {
+      _connectVal = Conn().connect(user, pin);
       connected = true;
     });
   }
-  final Future<User> _connectVal = Conn().find(2);
     // initializeDateFormatting();
     // Intl.defaultLocale = 'fr_FR';
     return Scaffold(

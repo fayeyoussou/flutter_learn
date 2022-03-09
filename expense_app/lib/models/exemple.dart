@@ -12,7 +12,7 @@ class Exemple extends StatefulWidget {
 }
 
 class _ExempleState extends State<Exemple> {
-  final Future<User> _calculation = Conn().find(2);
+  final Future<User> _calculation = Conn().findUserByid(2);
 
   @override
   Widget build(BuildContext context) {

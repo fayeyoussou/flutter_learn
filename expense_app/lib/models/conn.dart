@@ -4,7 +4,7 @@ import 'package:mysql_utils/mysql1/mysql1.dart';
 import 'package:mysql_utils/mysql_utils.dart';
 
 class Conn {
-  Future<User> find(int id) async {
+  Future<User> findUserByid(int id) async {
     final db = MysqlUtils(
       settings: ConnectionSettings(
         host: 'remotemysql.com',
@@ -21,9 +21,7 @@ class Conn {
     var row = await db.getOne(
       table: 'utilisateur',
       fields: '*',
-      where: {
-        'idutilisateur': 2
-        },
+      where: {'idutilisateur': 2},
     );
     User u = User();
     row.forEach((key, value) {
@@ -140,5 +138,42 @@ class Conn {
     //   debug: true,
     // );
     // print(row2);
+  }
+
+  Future<User> connect(String username, int pin) async {
+    final db = MysqlUtils(
+      settings: ConnectionSettings(
+        host: 'remotemysql.com',
+        port: 3306,
+        user: 's1E5FKGp0B',
+        password: 'U2YLck8V8B',
+        db: 's1E5FKGp0B',
+        useCompression: false,
+        useSSL: false,
+        timeout: const Duration(seconds: 10),
+      ),
+      pool: true,
+    );
+    var row = await db.getOne(
+      table: 'utilisateur',
+      fields: '*',
+      where: {
+        'login': username,
+        'pin': pin,
+      },
+    );
+    User u = User();
+    if (row.length > 0) {
+      row.forEach((key, value) {
+        if (key == 'idutilisateur')
+          u.id = value;
+        else if (key == 'login')
+          u.login = value;
+        else
+          u.pin = value;
+      });
+    } else
+      u.login = 'empty';
+    return u;
   }
 }
