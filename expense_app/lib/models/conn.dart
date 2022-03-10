@@ -1,4 +1,6 @@
+// import 'dart:async';
 import 'dart:async';
+import 'package:expense_app/models/Achat.dart';
 import 'package:expense_app/models/user.dart';
 import 'package:mysql_utils/mysql1/mysql1.dart';
 import 'package:mysql_utils/mysql_utils.dart';
@@ -21,7 +23,7 @@ class Conn {
     var row = await db.getOne(
       table: 'utilisateur',
       fields: '*',
-      where: {'idutilisateur': 2},
+      where: {'idutilisateur': id},
     );
     User u = User();
     row.forEach((key, value) {
@@ -32,6 +34,7 @@ class Conn {
       else
         u.pin = value;
     });
+    // print(u.login);
     return u;
     ////
     ///
@@ -167,13 +170,39 @@ class Conn {
       row.forEach((key, value) {
         if (key == 'idutilisateur')
           u.id = value;
-        else if (key == 'login')
+        else if (key == 'login') {
+          // print(value);
           u.login = value;
-        else
+        } else
           u.pin = value;
       });
     } else
       u.login = 'empty';
+    db.close();
+    // print(u.id);
     return u;
+  }
+
+  Future<List<Achat>> getAchat(int? id) async {
+    final db = MysqlUtils(
+      settings: ConnectionSettings(
+        host: 'remotemysql.com',
+        port: 3306,
+        user: 's1E5FKGp0B',
+        password: 'U2YLck8V8B',
+        db: 's1E5FKGp0B',
+        useCompression: false,
+        useSSL: false,
+        timeout: const Duration(seconds: 10),
+      ),
+      pool: true,
+    );
+    var res = await db
+        .getAll(table: 'achat', fields: '*', where: {'idUtilisateur': id});
+    List<Achat> ach = [];
+    res.forEach((element) {
+      print(element['date']);
+    });
+    return ach;
   }
 }
