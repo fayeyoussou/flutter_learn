@@ -125,7 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   List<Widget> children;
                   if (snapshot.hasData) {
                     // print(snapshot.data?.id);
-                    Conn().getAchat(snapshot.data?.id ?? 0);
+                    var a = Conn().getAchat(snapshot.data?.id ?? 0);
+                    id = snapshot.data?.id ?? 0;
                     children = <Widget>[
                       Column(
                         //   // it is the default setting
@@ -141,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               elevation: 20,
                             ),
                           ),
-                          TransactionList(_userTransactions)
+                          TransactionList(id)
                         ],
                       ),
                     ];
