@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:expense_app/models/transaction.dart';
 
+import '../models/Achat.dart';
 import '../models/conn.dart';
 import '../models/user.dart';
 // import '../models/transaction.dart';
@@ -125,8 +126,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   List<Widget> children;
                   if (snapshot.hasData) {
                     // print(snapshot.data?.id);
-                    var a = Conn().getAchat(snapshot.data?.id ?? 0);
-                    id = snapshot.data?.id ?? 0;
+                    Future<List<Achat>> listAchat = Conn().getAchat(snapshot.data?.id ?? 0);
+                    // id = snapshot.data?.id ?? 0;
                     children = <Widget>[
                       Column(
                         //   // it is the default setting
@@ -138,11 +139,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 170,
                             child: Card(
                               color: Theme.of(context).primaryColorDark,
-                              child: Chart(_recentTransactions),
+                              child: Chart(listAchat),
                               elevation: 20,
                             ),
                           ),
-                          TransactionList(id)
+                          TransactionList(listAchat)
                         ],
                       ),
                     ];

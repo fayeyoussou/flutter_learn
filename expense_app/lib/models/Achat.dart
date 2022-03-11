@@ -17,15 +17,34 @@ class Achat {
     return prix;
   }
 
+  int get getIdAchat {
+    return idAchat ?? 0;
+  }
+
+  DateTime get getDateAchat {
+    return dateAchat ?? DateTime.now();
+  }
+
+  int get getUser {
+    return user ?? 0;
+  }
+  List<AchatProduit> get getAchat {
+    return achat ?? [];
+  }
+
+
   String get title {
     String title = '';
     int i = 0;
     for (var item in achat!) {
-      String nomprod = item?.produit?.nom ?? '';
+      String nomprod = item.produit?.nom ?? '';
       if (i > 0) title += ' et ';
+      if (i == 2) {
+        title += '...';
+        break;
+      }
       title += '$nomprod';
       i++;
-      
     }
     return title;
   }

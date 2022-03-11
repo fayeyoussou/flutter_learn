@@ -9,17 +9,17 @@ import 'package:intl/date_symbol_data_local.dart';
 
 class TransactionList extends StatelessWidget {
   // final List<Transaction> transactions;
-  final int id;
-  TransactionList(this.id);
+  Future<List<Achat>> listAchat;
+  TransactionList(this.listAchat);
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting();
-    Future<List<Achat>> _achats = Conn().getAchat(id);
-    print('id ---> $id');
+    // Future<List<Achat>> _achats = Conn().getAchat(id);
+    // print('id ---> $id');
     return Container(
         height: 350,
         child: FutureBuilder<List<Achat>>(
-          future: _achats, // a previously-obtained Future<String> or null
+          future: listAchat, // a previously-obtained Future<String> or null
           builder: (BuildContext context, AsyncSnapshot<List<Achat>> snapshot) {
             List<Widget> children;
             if (snapshot.hasData) {
@@ -51,8 +51,8 @@ class TransactionList extends StatelessWidget {
                         ],
                       )
                     : Container(
-                      height: 350,
-                      child: ListView.builder(
+                        height: 350,
+                        child: ListView.builder(
                           itemBuilder: (context, index) {
                             return Card(
                               margin: EdgeInsets.symmetric(
@@ -71,50 +71,15 @@ class TransactionList extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 subtitle: Text(
-                                  DateFormat('EEEEE d MMM yyyy', 'fr')
-                                      .format(lista[index].dateAchat as DateTime),
+                                  DateFormat('EEEEE d MMM yyyy', 'fr').format(
+                                      lista[index].dateAchat as DateTime),
                                 ),
                               ),
                             );
-                            //   return Card(
-                            //     elevation: 10,
-                            //     child: Row(
-                            //       children: [
-                            //         Container(
-                            //           padding: EdgeInsets.all(10),
-                            //           margin:
-                            //               EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                            //           decoration: BoxDecoration(
-                            //               borderRadius: BorderRadius.circular(10),
-                            //               border: Border.all(color: Colors.purple, width: 3),
-                            //               color: Colors.cyan),
-                            //           child: Text(
-                            //             '${transactions[index].amount.toInt()} F',
-                            //             style: TextStyle(
-                            //                 fontWeight: FontWeight.bold,
-                            //                 fontSize: 20,
-                            //                 color: Theme.of(context).primaryColorDark),
-                            //           ),
-                            //         ),
-                            //         Column(
-                            //           crossAxisAlignment: CrossAxisAlignment.start,
-                            //           children: [
-                            //             Text(transactions[index].title,
-                            //                 style: Theme.of(context).textTheme.bodyText1),
-                            //             Text(
-                            //               DateFormat('EEEEE d MMM yyyy', 'fr')
-                            //                   .format(transactions[index].date),
-                            //               style: TextStyle(color: Colors.grey, fontSize: 10),
-                            //             )
-                            //           ],
-                            //         )
-                            //       ],
-                            //     ),
-                            //   );
                           },
                           itemCount: len,
                         ),
-                    ),
+                      ),
               ];
             } else if (snapshot.hasError) {
               children = <Widget>[

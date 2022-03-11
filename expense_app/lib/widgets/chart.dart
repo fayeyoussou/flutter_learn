@@ -4,20 +4,21 @@ import 'package:expense_app/widgets/chart_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/Achat.dart';
+
 class Chart extends StatelessWidget {
-  final List<Transaction> recentTransactions;
-  Chart(this.recentTransactions);
-  List<ChartValue> get TransVal {
+  Future<List<Achat>> listAchat;
+  Chart(this.listAchat);
+  List<ChartValue> getTransVal(List<Achat> listAchat) {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(Duration(days: index));
       double totalSum = 0;
-      for (var i = 0; i < this.recentTransactions.length; i++) {
-        if (weekDay.day == this.recentTransactions[i].date.day &&
-            this
-                .recentTransactions[i]
-                .date
+      for (var i = 0; i < listAchat.length; i++) {
+        if (weekDay.day == listAchat[i].getDateAchat.day &&
+            listAchat[i]
+                .getDateAchat
                 .isAfter(DateTime.now().subtract(Duration(days: 30)))) {
-          totalSum += recentTransactions[i].amount;
+          totalSum += listAchat[i].prix;
         }
       }
       return ChartValue(
@@ -26,16 +27,50 @@ class Chart extends StatelessWidget {
     });
   }
 
-  double get depMax {
-    return TransVal.fold(0.0, (sum, element) {
-      return sum + element.amount;
-    });
-  }
+  // double get depMax {
+  //   return TransVal.fold(0.0, (sum, element) {
+  //     return sum + element.amount;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     // print('value is $ca');
-    return Card(
+    return FutureBuilder<List<Achat>>(
+      future: listAchat, // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<List<Achat>> snapshot) {
+        List<Widget> children;
+        if (snapshot.hasData) {
+          List<Achat> lista = snapshot.data ?? [];
+          int len = snapshot.data?.length ?? 0;
+          List<ChartValue> TransVal = getTransVal(lista);
+          double depMax = TransVal.fold(0.0, (sum, element) {
+      return sum + element.amount;
+    });
+          // print(snapshot.data?.id);
+          // print(snapshot.data!.first.dateAchat);
+          children = <Widget>[
+            lista.isEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Vous n\'avez rien achete \npour le moment',
+                        style: Theme.of(context).textTheme.bodyText1,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                          height: 200,
+                          child: Image.asset(
+                            'assets/images/waiting.png',
+                            fit: BoxFit.cover,
+                          ))
+                    ],
+                  )
+                : Card(
       elevation: 20,
       margin: EdgeInsets.all(20),
       child: Container(
@@ -49,6 +84,40 @@ class Chart extends StatelessWidget {
           }).toList(),
         ),
       ),
+    ),
+          ];
+        } else if (snapshot.hasError) {
+          children = <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text('Error: ${snapshot.error}'),
+            )
+          ];
+        } else {
+          children = const <Widget>[
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text('Awaiting result...'),
+            )
+          ];
+        }
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          ),
+        );
+      },
     );
   }
 }
