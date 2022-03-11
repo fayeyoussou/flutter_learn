@@ -42,6 +42,7 @@ dependencies:
   mysql1: ^0.19.2
   passwordfield: ^0.1.0
   mysql_utils: ^1.0.7
+  widgets: ^1.4.5
   
   
   

@@ -113,13 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // initializeDateFormatting();
     // Intl.defaultLocale = 'fr_FR';
-    return Scaffold(
+    return connected
+          ? Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.help)),
         title: const Text('QrCode App'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.location_on))],
       ),
-      body: connected
-          ? SingleChildScrollView(
+      body: SingleChildScrollView(
               child: FutureBuilder<User>(
                 future:
                     _connectVal, // a previously-obtained Future<String> or null
@@ -183,12 +184,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               
             )
-          : BodyConnexion(connect),
+          ,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => ScanQr(),
       ),
-    );
+    ): BodyConnexion(connect);
   }
 }
