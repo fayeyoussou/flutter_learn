@@ -43,7 +43,7 @@ class Chart extends StatelessWidget {
         if (snapshot.hasData) {
           List<Achat> lista = snapshot.data ?? [];
           int len = snapshot.data?.length ?? 0;
-          List<ChartValue> TransVal = getTransVal(lista);
+          List<ChartValue> TransVal = getTransVal(lista).reversed.toList();
           double depMax = TransVal.fold(0.0, (sum, element) {
       return sum + element.amount;
     });

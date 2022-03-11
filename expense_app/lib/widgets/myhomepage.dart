@@ -97,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     Conn c = Conn();
     Future<User> _connectVal = c.connect(user, pin);
+    
     // print(user + 'user <-');
     void connect(String usern, int pinn) {
       // c.getAchat(1);
@@ -125,9 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
                   List<Widget> children;
                   if (snapshot.hasData) {
-                    // print(snapshot.data?.id);
+                    
                     Future<List<Achat>> listAchat = Conn().getAchat(snapshot.data?.id ?? 0);
-                    // id = snapshot.data?.id ?? 0;
+                    
                     children = <Widget>[
                       Column(
                         //   // it is the default setting
@@ -180,23 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
               ),
-              // child: Column(
-              //   // it is the default setting
-              //   //mainAxisAlignment: MainAxisAlignment.start,
-              //   crossAxisAlignment: CrossAxisAlignment.stretch,
-              //   children: [
-              //     Container(
-              //       width: double.infinity,
-              //       height: 170,
-              //       child: Card(
-              //         color: Theme.of(context).primaryColorDark,
-              //         child: Chart(_recentTransactions),
-              //         elevation: 20,
-              //       ),
-              //     ),
-              //     TransactionList(_userTransactions)
-              //   ],
-              // ),
+              
             )
           : BodyConnexion(connect),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
