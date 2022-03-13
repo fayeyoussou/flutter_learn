@@ -4,7 +4,34 @@ class User {
   int? id;
   String? login;
   int? pin;
+  double? somme;
+  String? prenom;
+  String? nom;
   // User({required this.login, required this.password, this.id});
+  int get getId {
+    return id ?? 0;
+  }
+
+  String get getLogin {
+    return login ?? '';
+  }
+
+  int get getPin {
+    return pin ?? 0;
+  }
+
+  double get getSomme {
+    return somme ?? 0;
+  }
+
+  String get getPrenom {
+    return prenom ?? "";
+  }
+
+  String get getNom {
+    return nom ?? "";
+  }
+
   getUser(int id) async {
     var co = Conn();
     var set;

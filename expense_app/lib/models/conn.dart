@@ -2,12 +2,14 @@
 import 'dart:async';
 import 'package:expense_app/models/Achat.dart';
 import 'package:expense_app/models/achat_produit.dart';
+import 'package:expense_app/models/my_connection.dart';
 import 'package:expense_app/models/produit.dart';
 import 'package:expense_app/models/user.dart';
 import 'package:mysql_utils/mysql1/mysql1.dart';
 import 'package:mysql_utils/mysql_utils.dart';
 
 class Conn {
+  MyConnection dba = MyConnection();
   Future<User> findUserByid(int id) async {
     final db = MysqlUtils(
       settings: ConnectionSettings(
@@ -145,26 +147,14 @@ class Conn {
     // print(row2);
   }
 
+  CreerUser() async {}
   Future<User> connect(String username, int pin) async {
-    final db = MysqlUtils(
-      settings: ConnectionSettings(
-        host: 'remotemysql.com',
-        port: 3306,
-        user: 's1E5FKGp0B',
-        password: 'U2YLck8V8B',
-        db: 's1E5FKGp0B',
-        useCompression: false,
-        useSSL: false,
-        timeout: const Duration(seconds: 10),
-      ),
-      pool: true,
-    );
+    final db = await this.dba.database;
     var row = await db.getOne(
       table: 'utilisateur',
       fields: '*',
       where: {
         'login': username,
-        'pin': pin,
       },
     );
     User u = User();
@@ -175,30 +165,27 @@ class Conn {
         else if (key == 'login') {
           // print(value);
           u.login = value;
-        } else
+        } else if (key == 'pin') {
           u.pin = value;
+        } else if (key == 'compte')
+          u.somme = value;
+        else if (key == 'prenom')
+          u.prenom = value;
+        else if (key == 'nom') u.nom = value;
       });
     } else
       u.login = 'empty';
+    if (u.pin != pin) {
+      u = User();
+    }
     db.close();
+
     // print(u.id);
     return u;
   }
 
   Future<List<Achat>> getAchat(int? id) async {
-    final db = MysqlUtils(
-      settings: ConnectionSettings(
-        host: 'remotemysql.com',
-        port: 3306,
-        user: 's1E5FKGp0B',
-        password: 'U2YLck8V8B',
-        db: 's1E5FKGp0B',
-        useCompression: false,
-        useSSL: false,
-        timeout: const Duration(seconds: 10),
-      ),
-      pool: true,
-    );
+    final db = await this.dba.database;
     var res = await db
         .getAll(table: 'achat', fields: '*', where: {'idUtilisateur': id});
     List<Achat> ach = [];
@@ -211,6 +198,7 @@ class Conn {
       a.achat = await getAchatProduit(item['idachat']).then((value) => value);
       ach.add(a);
     }
+
     // res.forEach((element) async {
     //   var a = Achat();
     //   a.dateAchat = element['date'];
@@ -241,19 +229,8 @@ class Conn {
   }
 
   Future<List<AchatProduit>> getAchatProduit(int? id) async {
-    final db = MysqlUtils(
-      settings: ConnectionSettings(
-        host: 'remotemysql.com',
-        port: 3306,
-        user: 's1E5FKGp0B',
-        password: 'U2YLck8V8B',
-        db: 's1E5FKGp0B',
-        useCompression: false,
-        useSSL: false,
-        timeout: const Duration(seconds: 10),
-      ),
-      pool: true,
-    );
+    final db = await this.dba.database;
+
     var res = await db
         .getAll(table: 'achatproduit', fields: '*', where: {'idAchat': id});
     // res.forEach((element) async {
@@ -279,19 +256,7 @@ class Conn {
 
   Future<Produit> getproduit(String? id) async {
     Produit p = Produit();
-    final db = MysqlUtils(
-      settings: ConnectionSettings(
-        host: 'remotemysql.com',
-        port: 3306,
-        user: 's1E5FKGp0B',
-        password: 'U2YLck8V8B',
-        db: 's1E5FKGp0B',
-        useCompression: false,
-        useSSL: false,
-        timeout: const Duration(seconds: 10),
-      ),
-      pool: true,
-    );
+    final db = await this.dba.database;
     var res = await db.getOne(
       table: 'produit',
       fields: '*',

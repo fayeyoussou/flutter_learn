@@ -1,11 +1,12 @@
+import 'package:expense_app/models/achat_produit.dart';
 import 'package:flutter/material.dart';
 
 class NewTransaction extends StatefulWidget {
   //const New_transaction({Key? key}) : super(key: key);
   final void Function(String, double) addNew;
-  final String produit;
+  final List<AchatProduit> achatProduit;
 
-  NewTransaction({required this.addNew,required this.produit});
+  NewTransaction({required this.addNew,required this.achatProduit});
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -28,7 +29,7 @@ class _NewTransactionState extends State<NewTransaction> {
   Widget build(BuildContext context) {
     return Container(
       height: 100,
-      child: Text(widget.produit)
+      child: Text(widget.achatProduit[0].id.toString())
     );
   }
 }

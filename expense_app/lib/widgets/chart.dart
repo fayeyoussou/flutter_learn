@@ -8,7 +8,8 @@ import '../models/Achat.dart';
 
 class Chart extends StatelessWidget {
   Future<List<Achat>> listAchat;
-  Chart(this.listAchat);
+  double somme;
+  Chart(this.listAchat,this.somme);
   List<ChartValue> getTransVal(List<Achat> listAchat) {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(Duration(days: index));
@@ -45,46 +46,35 @@ class Chart extends StatelessWidget {
           int len = snapshot.data?.length ?? 0;
           List<ChartValue> TransVal = getTransVal(lista).reversed.toList();
           double depMax = TransVal.fold(0.0, (sum, element) {
-      return sum + element.amount;
-    });
+            return sum + element.amount;
+          });
           // print(snapshot.data?.id);
           // print(snapshot.data!.first.dateAchat);
           children = <Widget>[
-            lista.isEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Vous n\'avez rien achete \npour le moment',
-                        style: Theme.of(context).textTheme.bodyText1,
-                        textAlign: TextAlign.center,
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top : 10.0),
+                  child: Text('Fonds : $somme',textAlign: TextAlign.center,textWidthBasis: TextWidthBasis.longestLine,style: Theme.of(context).textTheme.bodyText2),
+                ),
+                Card(
+                        elevation: 20,
+                        margin: EdgeInsets.all(18),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: TransVal.map((e) {
+                              return Flexible(
+                                  fit: FlexFit.tight,
+                                  child: ChartBar(
+                                      e, depMax == 0 ? 0.0 : e.amount / depMax));
+                            }).toList(),
+                          ),
+                        ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                          height: 200,
-                          child: Image.asset(
-                            'assets/images/waiting.png',
-                            fit: BoxFit.cover,
-                          ))
-                    ],
-                  )
-                : Card(
-      elevation: 20,
-      margin: EdgeInsets.all(20),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: TransVal.map((e) {
-            return Flexible(
-              fit: FlexFit.tight,
-              child: ChartBar(e, depMax == 0 ? 0.0 : e.amount / depMax));
-          }).toList(),
-        ),
-      ),
-    ),
+              ],
+            ),
           ];
         } else if (snapshot.hasError) {
           children = <Widget>[

@@ -25,8 +25,9 @@ class TransactionList extends StatelessWidget {
             if (snapshot.hasData) {
               List<Achat> lista = snapshot.data ?? [];
               int len = snapshot.data?.length ?? 0;
-              print('len ${snapshot.data?.length}');
-              print(snapshot.data![0].achat![0].produit!.nom);
+              print(snapshot.data);
+              // print('len ${snapshot.data?.length}');
+              // print(snapshot.data![0].achat![0].produit!.nom);
               // print(snapshot.data?.id);
               // print(snapshot.data!.first.dateAchat);
               children = <Widget>[

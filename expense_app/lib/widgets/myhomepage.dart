@@ -12,6 +12,7 @@ import 'package:expense_app/models/transaction.dart';
 import '../models/Achat.dart';
 import '../models/conn.dart';
 import '../models/user.dart';
+import 'map.dart';
 // import '../models/transaction.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -26,8 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final titleController = TextEditingController();
 
   final amountController = TextEditingController();
-  String user = '';
-  int pin = 0;
+  User user = User();
   int id = 1;
 
   final List<Transaction> _userTransactions = [
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {},
               child: NewTransaction(
                 addNew: _addNew,
-                produit: produit,
+                achatProduit: [],
               ));
         });
   }
@@ -95,101 +95,64 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Conn c = Conn();
-    Future<User> _connectVal = c.connect(user, pin);
-    
     // print(user + 'user <-');
-    void connect(String usern, int pinn) {
+    Future<bool> connect(String usern, int pinn) async {
       // c.getAchat(1);
       // this.name = controller.text;
-
-      setState(() {
-        // _connectVal = Conn().connect(usern, pinn);
-        user = usern;
-        pin = pinn;
-        connected = true;
+      Conn c = Conn();
+      return await c.connect(usern, pinn).then((value) {
+        if (value.getId != 0) {
+          setState(() {
+            // _connectVal = Conn().connect(usern, pinn);
+            user = value;
+            connected = true;
+          });
+          return true;
+        } else
+          return false;
       });
     }
 
+    Future<List<Achat>> listAchat = Conn().getAchat(user.getId);
     // initializeDateFormatting();
     // Intl.defaultLocale = 'fr_FR';
     return connected
-          ? Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.help)),
-        title: const Text('QrCode App'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.location_on))],
-      ),
-      body: SingleChildScrollView(
-              child: FutureBuilder<User>(
-                future:
-                    _connectVal, // a previously-obtained Future<String> or null
-                builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-                  List<Widget> children;
-                  if (snapshot.hasData) {
-                    
-                    Future<List<Achat>> listAchat = Conn().getAchat(snapshot.data?.id ?? 0);
-                    
-                    children = <Widget>[
-                      Column(
-                        //   // it is the default setting
-                        //   //mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: 170,
-                            child: Card(
-                              color: Theme.of(context).primaryColorDark,
-                              child: Chart(listAchat),
-                              elevation: 20,
-                            ),
-                          ),
-                          TransactionList(listAchat)
-                        ],
-                      ),
-                    ];
-                  } else if (snapshot.hasError) {
-                    children = <Widget>[
-                      const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Text('Error: ${snapshot.error}'),
-                      )
-                    ];
-                  } else {
-                    children = const <Widget>[
-                      SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Text('Awaiting result...'),
-                      )
-                    ];
-                  }
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: children,
+        ? Scaffold(
+            appBar: AppBar(
+              leading:
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.help)),
+              title: const Text('QrCode App'),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: ((context) => MyMap())));
+                    }, icon: const Icon(Icons.location_on))
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    child: Card(
+                      color: Theme.of(context).primaryColorDark,
+                      child: Chart(Conn().getAchat(user.getId),user.getSomme),
+                      elevation: 20,
                     ),
-                  );
-                },
+                  ),
+                  TransactionList(Conn().getAchat(user.getId))
+                ],
               ),
-              
-            )
-          ,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => ScanQr(),
-      ),
-    ): BodyConnexion(connect);
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () => ScanQr(),
+            ),
+          )
+        : BodyConnexion(connect, "");
   }
 }

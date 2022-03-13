@@ -20,7 +20,15 @@ class MyApp extends StatelessWidget {
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
-                  color: Colors.blueAccent)),
+                  color: Colors.blueAccent),
+              bodyText2: const TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.black)
+            
+                  ),
+            
           appBarTheme: const AppBarTheme(
               titleTextStyle: TextStyle(
                   fontFamily: 'OpenSans',
