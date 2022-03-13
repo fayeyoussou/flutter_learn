@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.amberAccent))),
       title: 'Expense',
-      home: MyHomePage() as Widget,
+      home: MyHomePage(),
     );
   }
 }
