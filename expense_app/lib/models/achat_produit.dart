@@ -5,4 +5,7 @@ class AchatProduit {
   int? idAchat;
   Produit? produit;
   int? quantite;
+  int get getQuantite {
+    return quantite ?? 0;
+  }
 }

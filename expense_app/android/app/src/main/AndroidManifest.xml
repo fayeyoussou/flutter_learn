@@ -2,11 +2,11 @@
     package="com.example.expense_app">
     <uses-permission android:name="android.permission.CAMERA"/>
    <application
-        <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBURTnZatSCnMZfowdXwYA1Y9ceWTT_GkE"/>
         android:label="expense_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBURTnZatSCnMZfowdXwYA1Y9ceWTT_GkE"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

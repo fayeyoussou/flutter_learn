@@ -1,3 +1,4 @@
+import 'package:expense_app/models/achat_produit.dart';
 import 'package:expense_app/models/exemple.dart';
 import 'package:expense_app/widgets/body_connexion.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // String? titleInput;
   bool connected = false;
 
-  final titleController = TextEditingController();
-
-  final amountController = TextEditingController();
+  List<AchatProduit> achatEnCours = [];
   User user = User();
   int id = 1;
 
@@ -52,25 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
         amount: 1500,
         date: DateTime.now().subtract(Duration(days: 1)))
   ];
-  void _addNew(String txTitle, double txAmount) {
-    final newTx = Transaction(
-        id: (DateTime.now()).toString(),
-        title: txTitle,
-        amount: txAmount,
-        date: DateTime.now());
+  void _addNew() {
+    
     setState(() {
-      _userTransactions.add(newTx);
+      Future<List<Achat>> listAchat = Conn().getAchat(user.getId);
     });
   }
 
-  List<Transaction> get _recentTransactions {
-    return _userTransactions.where((element) {
-      return element.date
-          .isAfter(DateTime.now().subtract(const Duration(days: 7)));
-    }).toList();
-  }
+  
 
-  void _startAddNewTransaction(BuildContext ctx, String produit) {
+  void _startAddNewTransaction(BuildContext ctx, List<AchatProduit> achatProduit) {
     showModalBottomSheet(
         context: ctx,
         builder: (bCtx) {
@@ -78,17 +68,27 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {},
               child: NewTransaction(
                 addNew: _addNew,
-                achatProduit: [],
+                achatProduit: achatProduit,
               ));
         });
   }
 
   String res = '';
-  Future<void> ScanQr() async {
+  Future<void> ScanQr(List<AchatProduit> achatEnCours) async {
     try {
       res = await FlutterBarcodeScanner.scanBarcode(
           '#FFF', 'Cancel', true, ScanMode.QR);
-      _startAddNewTransaction(context, res);
+      Conn().getproduit(res).then((value) {
+        if (value.getNom != "") {
+          AchatProduit p = AchatProduit();
+          p.produit = value;
+          setState(() {
+            achatEnCours.add(p);
+          });
+          _startAddNewTransaction(context, achatEnCours);
+        }
+      });
+
       print('Result = $res');
     } on PlatformException {}
   }
@@ -125,8 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: ((context) => MyMap())));
-                    }, icon: const Icon(Icons.location_on))
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: ((context) => MyMap())));
+                    },
+                    icon: const Icon(Icons.location_on))
               ],
             ),
             body: SingleChildScrollView(
@@ -138,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 200,
                     child: Card(
                       color: Theme.of(context).primaryColorDark,
-                      child: Chart(Conn().getAchat(user.getId),user.getSomme),
+                      child: Chart(Conn().getAchat(user.getId), user.getSomme),
                       elevation: 20,
                     ),
                   ),
@@ -150,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 FloatingActionButtonLocation.centerFloat,
             floatingActionButton: FloatingActionButton(
               child: const Icon(Icons.add),
-              onPressed: () => ScanQr(),
+              onPressed: () => ScanQr(achatEnCours),
             ),
           )
         : BodyConnexion(connect, "");

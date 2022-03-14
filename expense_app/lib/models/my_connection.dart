@@ -35,7 +35,7 @@ class MyConnection {
       await _db.query('select true', []);
       return _db;
     } catch (e) {
-        _db.close();
+        // _db.close();
         await Future.delayed(Duration(seconds: 2));
         _connect();
         await Future.delayed(Duration(seconds: 2));

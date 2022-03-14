@@ -41,6 +41,9 @@ dependencies:
   widgets: ^1.4.5
   flutter_barcode_scanner: ^2.0.0
   google_maps_flutter: ^2.1.2
+  dio: ^4.0.4
+  flutter_polyline_points: ^1.0.0
+  floating_text: ^0.1.1
   
   
   
