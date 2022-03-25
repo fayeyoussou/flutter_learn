@@ -1,12 +1,16 @@
 import 'package:expense_app/widgets/connexion.dart';
 import 'package:expense_app/widgets/myhomepage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-
-void main() => runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
+  Future<FirebaseApp> firebaseApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,10 +29,7 @@ class MyApp extends StatelessWidget {
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: Colors.black)
-            
-                  ),
-            
+                  color: Colors.black)),
           appBarTheme: const AppBarTheme(
               titleTextStyle: TextStyle(
                   fontFamily: 'OpenSans',
@@ -36,8 +37,17 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.amberAccent))),
       title: 'Expense',
-      home: MyHomePage(),
+      home: FutureBuilder(
+        future: firebaseApp,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("error");
+          } else if (snapshot.hasData)
+            return MyHomePage();
+          else
+            return Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }
-

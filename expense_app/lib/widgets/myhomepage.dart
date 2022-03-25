@@ -1,8 +1,12 @@
 import 'package:expense_app/models/achat_produit.dart';
+import 'package:expense_app/models/authentication.dart';
 import 'package:expense_app/models/exemple.dart';
+import 'package:expense_app/models/produit.dart';
 import 'package:expense_app/widgets/body_connexion.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:math';
 import 'package:expense_app/widgets/chart.dart';
 import 'package:expense_app/widgets/new_transaction.dart';
 import 'package:expense_app/widgets/transaction_list.dart';
@@ -24,43 +28,95 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // String? titleInput;
   bool connected = false;
-
+  final _database = FirebaseDatabase.instance.ref();
   List<AchatProduit> achatEnCours = [];
+  List<Achat> achat = [];
+
   User user = User();
   int id = 1;
+  Map all = {'achat': [], 'produit': [], 'achatproduit': []};
 
-  final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 'T1',
-        title: 'Chaussure',
-        amount: 1000,
-        date: DateTime.now().subtract(Duration(days: 2))),
-    Transaction(
-        id: 'T2',
-        title: 'Costume',
-        amount: 2000,
-        date: DateTime.now().subtract(Duration(days: 3))),
-    Transaction(
-        id: 'T2',
-        title: 'Costume',
-        amount: 3000,
-        date: DateTime.now().subtract(Duration(days: 1))),
-    Transaction(
-        id: 'T2',
-        title: 'soup kandja',
-        amount: 1500,
-        date: DateTime.now().subtract(Duration(days: 1)))
-  ];
   void _addNew() {
-    
     setState(() {
-      Future<List<Achat>> listAchat = Conn().getAchat(user.getId);
+      Future<List<Achat>> listAchat = Authentication().getAchat(user.getId);
     });
   }
 
-  
+  @override
+  void initState() {
+    super.initState();
+    _activeListener();
+  }
 
-  void _startAddNewTransaction(BuildContext ctx, List<AchatProduit> achatProduit) {
+  void _activeListener() {
+    _database.child('Achats').onValue.listen((event) {
+      setState(() {
+        all['achat'] = event.snapshot.value;
+        int id = (event.snapshot.value as List).length;
+        all['idAchat'] = id;
+      });
+    });
+    _database.child('Produit').onValue.listen((event) {
+      all['produit'] = event.snapshot.value;
+    });
+    _database.child('AchatPoduits').onValue.listen((event) {
+      all['achatproduit'] = event.snapshot.value;
+      int id = (event.snapshot.value as List).length;
+        all['idAchatProduit'] = id;
+    });
+  }
+
+  List<Achat> get ListAchate {
+    List<Achat> ach = [];
+    // print(all['achat']);
+    for (var i = 0; i < all['achat'].length; i++) {
+      // print(all['achat'][i]);
+      print('${all['achat'][i]}');
+      if (all['achat'][i] != null && all['achat'][i] == user.getId) {
+        print('${all['achat'][i]}\n');
+        Achat a = Achat();
+        a.achat = [];
+        for (var j = 0; j < all['achatproduit'].length; j++) {
+          // print(all['achatproduit'][j]);
+          if (all['achatproduit'][j] != null &&
+              all['achatproduit'][j]['idAchat'] == i) {
+            // print('${all['achatproduit'][j]}');
+            AchatProduit ap = AchatProduit();
+            ap.idAchat = i;
+            // print('${all['achatproduit'][j]['quantite']}');
+            ap.quantite = all['achatproduit'][j]['quantite'];
+            var apro = all['produit'] as Map;
+            apro.forEach((key, value) {
+              // print(
+              //     '${all['achatproduit'][j]['idProduit'].toString() == key.toString()} == $key');
+              if (all['achatproduit'][j]['idProduit'].toString() ==
+                  key.toString()) {
+                Produit prod = Produit();
+                prod.description = value['description'];
+                prod.nom = value['nom'];
+                print(value['nom']);
+                prod.idproduit = key;
+                // print(key);
+                // print(value['prix']);
+                prod.prix = value['prix'].toDouble();
+                ap.produit = prod;
+              }
+            });
+            a.achat.add(ap);
+          }
+        }
+        ach.add(a);
+        // print(ach);
+      }
+    }
+    // for (var i = 0; i < ach.length; i++) {
+    //   ach[i].achat[0].produit?.getNom;
+    // }
+    return ach;
+  }
+
+  void _startAddNewTransaction(
+      BuildContext ctx, List<AchatProduit> achatProduit) {
     showModalBottomSheet(
         context: ctx,
         builder: (bCtx) {
@@ -78,15 +134,22 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       res = await FlutterBarcodeScanner.scanBarcode(
           '#FFF', 'Cancel', true, ScanMode.QR);
-      Conn().getproduit(res).then((value) {
-        if (value.getNom != "") {
-          AchatProduit p = AchatProduit();
-          p.produit = value;
-          setState(() {
-            achatEnCours.add(p);
+      Authentication().getproduit(res).then((value) {
+        int value = 0;
+        int val2 = 0;
+        _database.child('Achats').onValue.listen((event) {
+          List val = event.snapshot.value as List;
+          value = val.length;
+          val2 = 0;
+          _database.child('AchatPoduits').onValue.listen((event) {
+            List val = event.snapshot.value as List;
+            val2 = val.length;
           });
-          _startAddNewTransaction(context, achatEnCours);
-        }
+        });
+        _database.child('AchatPoduits').update({
+          all['idAchatProduit'].toString(): {'idAchat': all['idAchat'], 'idProduit': res, 'quantite': 2}
+        });
+        _database.child('Achats').update({all['idAchat'].toString(): user.getId});
       });
 
       print('Result = $res');
@@ -96,31 +159,37 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // print(user + 'user <-');
-    Future<bool> connect(String usern, int pinn) async {
+    Future<bool> connect(String usern, String password) async {
       // c.getAchat(1);
       // this.name = controller.text;
-      Conn c = Conn();
-      return await c.connect(usern, pinn).then((value) {
-        if (value.getId != 0) {
+      return Authentication().Connect(usern, password).then((value) {
+        if (value == "error")
+          return false;
+        else {
           setState(() {
-            // _connectVal = Conn().connect(usern, pinn);
-            user = value;
+            user.id = value.uid;
             connected = true;
           });
           return true;
-        } else
-          return false;
+        }
       });
     }
 
-    Future<List<Achat>> listAchat = Conn().getAchat(user.getId);
+    // Future<List<Achat>> listAchat =
+    //     Authentication().getAchat('IxovWcVehwZb3hvY7VoQE3bLV452');
     // initializeDateFormatting();
     // Intl.defaultLocale = 'fr_FR';
+    print('debut');
+
     return connected
         ? Scaffold(
             appBar: AppBar(
-              leading:
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.help)),
+              leading: IconButton(
+                  onPressed: () {
+                    // print(user.getId);
+                    print('${ListAchate}');
+                  },
+                  icon: const Icon(Icons.help)),
               title: const Text('QrCode App'),
               actions: [
                 IconButton(
@@ -140,11 +209,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 200,
                     child: Card(
                       color: Theme.of(context).primaryColorDark,
-                      child: Chart(Conn().getAchat(user.getId), user.getSomme),
+                      child: Chart(ListAchate, 200000),
                       elevation: 20,
                     ),
                   ),
-                  TransactionList(Conn().getAchat(user.getId))
+                  TransactionList(ListAchate)
                 ],
               ),
             ),
@@ -155,6 +224,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => ScanQr(achatEnCours),
             ),
           )
-        : BodyConnexion(connect, "");
+        : BodyConnexion(connect, user.getId);
   }
 }

@@ -5,8 +5,8 @@ import 'package:expense_app/models/user.dart';
 class Achat {
   int? idAchat;
   DateTime? dateAchat;
-  int? user;
-  List<AchatProduit>? achat;
+  String? user;
+  List<AchatProduit> achat = [];
   double get prix {
     double prix = 0;
     for (var item in achat!) {
@@ -25,8 +25,8 @@ class Achat {
     return dateAchat ?? DateTime.now();
   }
 
-  int get getUser {
-    return user ?? 0;
+  String get getUser {
+    return user ?? "";
   }
   List<AchatProduit> get getAchat {
     return achat ?? [];

@@ -9,8 +9,8 @@ import 'package:intl/date_symbol_data_local.dart';
 
 class TransactionList extends StatelessWidget {
   // final List<Transaction> transactions;
-  Future<List<Achat>> listAchat;
-  TransactionList(this.listAchat);
+  List<Achat> lista;
+  TransactionList(this.lista);
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting();
@@ -18,19 +18,7 @@ class TransactionList extends StatelessWidget {
     // print('id ---> $id');
     return Container(
         height: 350,
-        child: FutureBuilder<List<Achat>>(
-          future: listAchat, // a previously-obtained Future<String> or null
-          builder: (BuildContext context, AsyncSnapshot<List<Achat>> snapshot) {
-            List<Widget> children;
-            if (snapshot.hasData) {
-              List<Achat> lista = snapshot.data ?? [];
-              int len = snapshot.data?.length ?? 0;
-              print(snapshot.data);
-              // print('len ${snapshot.data?.length}');
-              // print(snapshot.data![0].achat![0].produit!.nom);
-              // print(snapshot.data?.id);
-              // print(snapshot.data!.first.dateAchat);
-              children = <Widget>[
+        child: 
                 lista.isEmpty
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,47 +61,15 @@ class TransactionList extends StatelessWidget {
                                 ),
                                 subtitle: Text(
                                   DateFormat('EEEEE d MMM yyyy', 'fr').format(
-                                      lista[index].dateAchat as DateTime),
+                                      DateTime.now()),
                                 ),
                               ),
                             );
                           },
-                          itemCount: len,
+                          itemCount: lista.length,
                         ),
                       ),
-              ];
-            } else if (snapshot.hasError) {
-              children = <Widget>[
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text('Error: ${snapshot.error}'),
-                )
-              ];
-            } else {
-              children = const <Widget>[
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Text('Awaiting result...'),
-                )
-              ];
-            }
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: children,
-              ),
-            );
-          },
-        ));
+             
+        );
   }
 }
