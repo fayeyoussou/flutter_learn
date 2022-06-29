@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Widget> _buildLandscapeContent(
-      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+      MediaQueryData mediaQuery, PreferredSizeWidget appBar, Widget txListWidget) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Widget> _buildPortraitContent(
-      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+      MediaQueryData mediaQuery, PreferredSizeWidget appBar, Widget txListWidget) {
     return [
       Container(
         height: (mediaQuery.size.height -
@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  Widget _iosBarBuilder() {
+  PreferredSizeWidget _iosBarBuilder() {
     return CupertinoNavigationBar(
       middle: Text(
         'Personal Expenses',
@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _otherBarBuilder() {
+  PreferredSizeWidget _otherBarBuilder() {
     return AppBar(
       title: Text(
         'Personal Expenses',
