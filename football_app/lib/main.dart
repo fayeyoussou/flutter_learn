@@ -6,7 +6,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DeliMeals',
+      title: 'Football App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Football App'),
       ),
       body: Center(
-        child: Text('Navigation Time!'),
+        child: Text('Usage of navigation !'),
       ),
     );
   }
