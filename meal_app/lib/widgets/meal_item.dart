@@ -19,13 +19,14 @@ class MealItem extends StatelessWidget {
       onTap: selectMeal,
       child: Card(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15)
+            borderRadius: BorderRadius.circular(15) // set rounded corner on the card
         ),
         elevation: 4,
         margin: const EdgeInsets.all(10),
-        child: Column(children: [
+        child:
+        Column(children: [
           Stack(children: [
-            ClipRRect(
+            ClipRRect( //clipRect will be use because borderRadius cannot be set on Image
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(15),
                   topRight: Radius.circular(15)
@@ -36,6 +37,20 @@ class MealItem extends StatelessWidget {
                   fit: BoxFit.cover, // resize and re-crop the image
                 // so that it can fit into the container
               ), //for local image we use Image.asset
+            ),
+            Positioned(
+              bottom: 20,
+              right : 10,
+              child: Container(
+                width: 300,
+                color: Colors.black54,
+                padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 20),
+                child: Text(
+                  title,style: const TextStyle(fontSize: 26,color: Colors.white),
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
             )
           ],)
         ],),
