@@ -1,6 +1,8 @@
 
 
+// ignore: constant_identifier_names
 enum Complexity { Simple, Challenging, Hard }
+// ignore: constant_identifier_names
 enum Affordability { Affordable, Pricey, Luxurious }
 
 class Meal {
